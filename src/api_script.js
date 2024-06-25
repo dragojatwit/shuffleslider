@@ -54,7 +54,7 @@ if (code) {
 if (currentToken.access_token) {
   const userData = await getUserData();
   renderTemplate("main", "logged-in-template", userData);
-  renderTemplate("oauth", "oauth-template", currentToken);
+  //renderTemplate("oauth", "oauth-template", currentToken);
 }
 
 // Otherwise we're not logged in, so render the login template
