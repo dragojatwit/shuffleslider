@@ -1,0 +1,62 @@
+---
+title: "Shuffle Slider"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. 
+
+
+
+This will import the CSV file
+
+```{r}
+#plot(cars)
+install.packages("usethis")
+install.packages("git2r")
+```
+
+```{r}
+firstmeta = read.csv(sep = ",", header = TRUE, "C:\\Users\\koehlerd\\Desktop\\Classes\\Sem 2 Year 4\\Senior Project\\Datasets\\Metadata(1).csv")
+```
+
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
+
+```{r}
+summary(firstmeta)
+head(firstmeta)
+
+```
+
+
+
+```{r}
+##set.seed(234)
+train_indicies = createDataPartition(mydata$CONTROLVARIABLE, p = 0.8, list = FALSE) # splits data up 80% training 20% testing
+train_data = mydata[train_indicies, ]
+test_data = mydata[-train_indicies,]
+```
+
+
+
+# this is the KNN algorithm itself, this will be updated once we get data imported
+```{r}
+k = UNKNOWN_YET
+
+predicted_values = knn(train_data[, x], test_data[, x], train_data$CONTROLVARIABLE, k)
+```
+
+# to test the accuracy of the model (will output a percetage)
+
+```{r}
+accurate = mean(predicted_values == test_data$CONTROLVARIABLE)
+cat("Accuracy of model:", accurate)
+```
+
