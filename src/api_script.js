@@ -53,6 +53,8 @@ if (code) {
 // If we have a token, we're logged in, so fetch user data and render logged in template
 if (currentToken.access_token) {
   const userData = await getUserData();
+  const playlistData = await getPlaylistData(userData);
+  console.log(playlistData);
   renderTemplate("main", "logged-in-template", userData);
   //renderTemplate("oauth", "oauth-template", currentToken);
 }
@@ -138,6 +140,19 @@ async function getUserData() {
   return await response.json();
 }
 
+async function getPlaylistData(userData) {
+  const userID = userData.id;
+  const response = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + currentToken.access_token,
+    },
+  });
+
+  return await response.json();
+}
+
+
 // Click handlers
 async function loginWithSpotifyClick() {
   await redirectToSpotifyAuthorize();
@@ -184,3 +199,5 @@ function renderTemplate(targetId, templateId, data = null) {
     target.innerHTML = "";
     target.appendChild(clone);
   }
+
+ 
