@@ -8,8 +8,10 @@
 
 <body>
   <h1>Shuffle Slider</h1>
+  <!--targets for templates-->
   <div id="main"></div>
-  <div id="oauth"></div>
+
+  <div id="secondary"></div>
   
   <break></break>
   <template id="login">
@@ -28,20 +30,11 @@
     <button id="logout-button" data-bind-onclick="logoutClick();">Log out</button>
   </template>
 
-  <template id="oauth-template">
-    <h2>oAuth info</h2>
+  <template id ="userPlaylists">
+    <h3>Your Playlists</h3>
     <table>
       <tr>
-        <td>Access token</td>
-        <td data-bind="access_token"></td>
-      </tr>
-      <tr>
-        <td>Refresh token</td>
-        <td data-bind="refresh_token"></td>
-      </tr>
-      <tr>
-        <td>Expiration at</td>
-        <td data-bind="expires">${getExpirationDate(expires_in)}</td>
+        <td id="playlist1" data-bind="name"></td>
       </tr>
     </table>
   </template>

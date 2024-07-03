@@ -54,6 +54,10 @@ if (code) {
 if (currentToken.access_token) {
   const userData = await getUserData();
   const playlistData = await getPlaylistData(userData);
+
+  
+
+  //renderTemplate("secondary", "userPlaylists", [1]);
   console.log(playlistData);
   renderTemplate("main", "logged-in-template", userData);
   //renderTemplate("oauth", "oauth-template", currentToken);
@@ -163,11 +167,25 @@ async function logoutClick() {
   window.location.href = redirectUrl;
 }
 
-async function refreshTokenClick() {
-  const token = await refreshToken();
-  currentToken.save(token);
-  renderTemplate("oauth", "oauth-template", currentToken);
-}
+// async function refreshTokenClick() {
+//   const token = await refreshToken();
+//   currentToken.save(token);
+//   renderTemplate("oauth", "oauth-template", currentToken);
+// }
+
+// function templateRenderer(targetId, templateId, data = null)
+// {
+//   const template = document.getElementById(templateId);
+//   const cloneTemplate = template.content.cloneNode(true);
+
+  
+
+//   cloneTemplate.appendChild(data[1].name)
+
+//   const target = document.getElementById(targetId);
+//   target.innerHTML = "";
+//   target.appendChild(clone);
+// }
 
 function renderTemplate(targetId, templateId, data = null) {
     const template = document.getElementById(templateId);
