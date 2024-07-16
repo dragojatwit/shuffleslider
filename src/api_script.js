@@ -55,12 +55,9 @@ if (currentToken.access_token) {
   const userData = await getUserData();
   const playlistData = await getPlaylistData(userData);
 
-  
-
-  //renderTemplate("secondary", "userPlaylists", [1]);
   console.log(playlistData);
   renderTemplate("main", "logged-in-template", userData);
-  //renderTemplate("oauth", "oauth-template", currentToken);
+  renderTemplate("secondary", "userPlaylists", playlistData);
 }
 
 // Otherwise we're not logged in, so render the login template
@@ -191,6 +188,71 @@ function renderTemplate(targetId, templateId, data = null) {
     const template = document.getElementById(templateId);
     const clone = template.content.cloneNode(true);
   
+    if (templateId === "userPlaylists" && data) {
+        const playlistTableBody = clone.getElementById("playlistTableBody");
+
+        data.items.forEach(item => {
+        const tr = document.createElement("tr");
+        const tdImage = document.createElement("td");
+        if (item.images.length > 0) {
+          const img = document.createElement("img");
+          img.src = item.images[0].url; // Assuming the first image is the cover
+          img.alt = item.name;
+          img.width = 50; // Set width as needed
+          img.height = 50;
+          tdImage.appendChild(img);
+        } else {
+          // Placeholder if no image available
+          tdImage.textContent = "No Image";
+        }
+        tr.appendChild(tdImage);
+
+        const td = document.createElement("td");
+        const selectPlaylist = document.createElement("button");
+
+        selectPlaylist.id = "selectPlaylist";
+        selectPlaylist.textContent = item.name;
+        console.log(item);
+        selectPlaylist.addEventListener("click", () => {
+            renderTemplate("secondary","slider",item);
+        });
+
+        td.appendChild(selectPlaylist);
+        tr.appendChild(td);
+
+        playlistTableBody.appendChild(tr);
+      });
+    }
+
+    if(templateId == "slider" && data){
+
+      //data in this context refers to the single selected playlist
+      const selectedPlaylist = clone.getElementById("playlistDisplay");
+      const playlistName = document.createElement("div");
+
+      playlistName.textContent = data.name;
+
+      console.log(selectedPlaylist);
+
+      const playlistImage = document.createElement("div");
+      if (data.images.length > 0) {
+        const img = document.createElement("img");
+        img.src = data.images[0].url; 
+        img.alt = data.name;
+        img.width = 50; 
+        img.height = 50;
+        playlistImage.appendChild(img);
+      } else {
+        // Placeholder if no image available
+        playlistImage.textContent = "No Image";
+      }
+      console.log(playlistImage);
+      
+      selectedPlaylist.appendChild(playlistImage);
+      selectedPlaylist.appendChild(playlistName);
+
+    }
+
     const elements = clone.querySelectorAll("*");
     elements.forEach(ele => {
       const bindingAttrs = [...ele.attributes].filter(a => a.name.startsWith("data-bind"));

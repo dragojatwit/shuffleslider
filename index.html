@@ -30,13 +30,34 @@
     <button id="logout-button" data-bind-onclick="logoutClick();">Log out</button>
   </template>
 
-  <template id ="userPlaylists">
+  <template id="userPlaylists">
+    
+    <body>Please select a playlist you'd like Shuffle Slider to base it's recommendation off of!</body>
     <h3>Your Playlists</h3>
     <table>
-      <tr>
-        <td id="playlist1" data-bind="name"></td>
-      </tr>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Playlist</th>
+        </tr>
+      </thead>
+      <tbody id="playlistTableBody">
+        <!-- Playlists will be dynamically added here -->
+      </tbody>
     </table>
+  </template>
+  
+  <template id="slider">
+      <h3>Selected Playlist</h3>
+      <body id="playlistDisplay"> 
+        
+      </body>
+      <body>
+        Now that you've selected your playlist, would you prefer a recommendation that is similar to 
+        the music in your playlist, or would you like to try something new? Set the Slider accordlingly, with 1
+        being the least similar to your music, and 10 being the most similar!
+      </body>
+      <input type ="range" id="theSlider" min = "1" max = "10" value = "5">
   </template>
 
   <script src="src/api_script.js" type="module"></script>
