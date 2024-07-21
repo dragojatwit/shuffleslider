@@ -35,8 +35,24 @@ body, h1, h2, h3, p, ul, li {
     margin-bottom: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width:fit-content;
+    margin-left:auto;
+    margin-right:auto;
   }
   
+  #secondary {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width:fit-content;
+    margin-left:auto;
+    margin-right:auto;
+  }
+    
+  
+
   /* Buttons */
   button {
     background-color: #1db954;
@@ -48,16 +64,13 @@ body, h1, h2, h3, p, ul, li {
     border-radius: 4px;
     margin-top: 10px;
   }
+
   
+
   button:hover {
     background-color: #1ed760;
   }
   
-  /* Input range */
-  input[type="range"] {
-    width: 100%;
-    margin: 10px 0;
-  }
   
   /* Tables */
   table {
@@ -66,13 +79,11 @@ body, h1, h2, h3, p, ul, li {
     margin-bottom: 10px;
   }
   
-  table, th, td {
-    border: 1px solid #ddd;
-  }
+  
   
   th, td {
     padding: 8px;
-    text-align: left;
+    text-align: center;
   }
   
   th:first-of-type, td:first-of-type {
@@ -83,7 +94,17 @@ body, h1, h2, h3, p, ul, li {
     box-sizing: border-box;
   }
 
-  /* Responsive adjustments */
+  #logout-button {
+    display: flex;
+    align-items: center;
+  }
+
+  #selectPlaylist {
+    background-color: #7e26bd;
+    
+    
+  }
+
   @media (max-width: 768px) {
     h1 {
       font-size: 28px;

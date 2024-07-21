@@ -164,26 +164,6 @@ async function logoutClick() {
   window.location.href = redirectUrl;
 }
 
-// async function refreshTokenClick() {
-//   const token = await refreshToken();
-//   currentToken.save(token);
-//   renderTemplate("oauth", "oauth-template", currentToken);
-// }
-
-// function templateRenderer(targetId, templateId, data = null)
-// {
-//   const template = document.getElementById(templateId);
-//   const cloneTemplate = template.content.cloneNode(true);
-
-  
-
-//   cloneTemplate.appendChild(data[1].name)
-
-//   const target = document.getElementById(targetId);
-//   target.innerHTML = "";
-//   target.appendChild(clone);
-// }
-
 function renderTemplate(targetId, templateId, data = null) {
     const template = document.getElementById(templateId);
     const clone = template.content.cloneNode(true);
@@ -212,12 +192,13 @@ function renderTemplate(targetId, templateId, data = null) {
         const selectPlaylist = document.createElement("button");
 
         selectPlaylist.id = "selectPlaylist";
+        
         selectPlaylist.textContent = item.name;
         console.log(item);
         selectPlaylist.addEventListener("click", () => {
             renderTemplate("secondary","slider",item);
         });
-
+        
         td.appendChild(selectPlaylist);
         tr.appendChild(td);
 
@@ -236,11 +217,15 @@ function renderTemplate(targetId, templateId, data = null) {
         history.back();
       });
 
-      // const submitButton = clone.getElementById("submitForRec");
-      // submitButton.addEventListener("click", () => {
-      //   const rec = callToR(data);
-      //   renderTemplate('secondary','reccomendation',rec)
-      // })
+      const submitButton = clone.getElementById("submitForRec");
+      submitButton.addEventListener("click", () => {
+        //const sliderValue = document.getElementById("theSlider").value;
+        //const rec = callToR(data,sliderValue);
+        const rec = "spotify:track:26I6RaeZZrIMyGAUwfNCxo";
+        
+        renderTemplate("secondary","recommendation",rec);
+        renderEmbed(rec);
+      })
 
       playlistName.textContent = data.name;
 
@@ -263,6 +248,16 @@ function renderTemplate(targetId, templateId, data = null) {
       selectedPlaylist.appendChild(playlistImage);
       selectedPlaylist.appendChild(playlistName);
 
+    }
+
+    if(templateId == "recommendation")
+    {
+      const restart = clone.getElementById("restartButton");
+      console.log("restarted");
+      restart.addEventListener("click",() => {
+        logoutClick();
+        
+      } )
     }
 
     const elements = clone.querySelectorAll("*");
@@ -292,3 +287,17 @@ function renderTemplate(targetId, templateId, data = null) {
     target.appendChild(clone);
   }
 
+  function renderEmbed(rec)
+  {
+    //from spotify for devs
+    window.onSpotifyIframeApiReady = (IFrameAPI) => {
+      const element = document.getElementById('recommendationEmbed');
+      const options = {
+          uri: rec
+        };
+      const callback = (EmbedController) => {};
+      IFrameAPI.createController(element, options, callback);
+    };
+    
+    
+  }

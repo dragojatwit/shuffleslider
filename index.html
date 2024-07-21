@@ -10,11 +10,16 @@
 <body>
   <h1>Shuffle Slider</h1>
   <!--targets for templates-->
-  <div id="main"></div>
+  
+    <div id="main"></div>
+    <div id="secondary"></div>
 
-  <div id="secondary"></div>
+    
+
+    
   
   <break></break>
+
   <template id="login">
     <h2>Welcome to Shuffle Slider!</h2>
     <h2>Login with Spotify Below to Begin!</h2>
@@ -23,25 +28,22 @@
 
   <template id="logged-in-template">
     <h3>Logged in as <span data-bind="display_name"></span></h3>
-    <img width="50" data-bind-src="images[0].url" data-bind-alt="display_name" />
-    <break></break>
     
+    
+    <img width="75" data-bind-src="images[0].url" data-bind-alt="display_name" />
 
-    <!--<button id="refresh-token-button" data-bind-onclick="refreshTokenClick();">Refresh Token</button>-->
+    
     <button id="logout-button" data-bind-onclick="logoutClick();">Log out</button>
+    
   </template>
 
   <template id="userPlaylists">
     
     <body>Please select a playlist you'd like Shuffle Slider to base it's recommendation off of!</body>
-    <h3>Your Playlists</h3>
+    <br></br>
+    <h3 style="text-align:center">Your Playlists</h3>
     <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>Playlist</th>
-        </tr>
-      </thead>
+      
       <tbody id="playlistTableBody">
         <!-- Playlists will be dynamically added here -->
       </tbody>
@@ -74,6 +76,27 @@
       
   </template>
 
+  <template id="recommendation">
+
+    <h3>Your Recommendation from Shuffle Slider</h3>
+
+    <body>
+
+      Here's your recommendation! Have fun!
+
+      <br></br>
+
+      <div id = "recommendationEmbed"></div>
+
+      <button id ="restartButton">Restart</button>
+
+      <br></br>
+    </body>
+
+    <!--script for dynamic spotify iframe embeds-->
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+
+  </template>
   <script src="src/api_script.js" type="module"></script>
 </body>
 
