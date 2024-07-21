@@ -189,7 +189,8 @@ function renderTemplate(targetId, templateId, data = null) {
     const clone = template.content.cloneNode(true);
   
     if (templateId === "userPlaylists" && data) {
-        const playlistTableBody = clone.getElementById("playlistTableBody");
+      console.log("loaded user playlists");  
+      const playlistTableBody = clone.getElementById("playlistTableBody");
 
         data.items.forEach(item => {
         const tr = document.createElement("tr");
@@ -228,13 +229,24 @@ function renderTemplate(targetId, templateId, data = null) {
 
       //data in this context refers to the single selected playlist
       const selectedPlaylist = clone.getElementById("playlistDisplay");
-      const playlistName = document.createElement("div");
+      const playlistName = document.createElement("th");
+
+      const backButton = clone.getElementById("returnToPL");
+      backButton.addEventListener("click", () => {
+        history.back();
+      });
+
+      // const submitButton = clone.getElementById("submitForRec");
+      // submitButton.addEventListener("click", () => {
+      //   const rec = callToR(data);
+      //   renderTemplate('secondary','reccomendation',rec)
+      // })
 
       playlistName.textContent = data.name;
 
       console.log(selectedPlaylist);
 
-      const playlistImage = document.createElement("div");
+      const playlistImage = document.createElement("th");
       if (data.images.length > 0) {
         const img = document.createElement("img");
         img.src = data.images[0].url; 
@@ -280,4 +292,3 @@ function renderTemplate(targetId, templateId, data = null) {
     target.appendChild(clone);
   }
 
- 

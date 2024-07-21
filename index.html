@@ -3,7 +3,8 @@
 
 <head>
   <title>Shuffle Slider</title>
-  
+  <link rel="stylesheet" type="text/css" href="/style.css">
+
 </head>
 
 <body>
@@ -49,15 +50,28 @@
   
   <template id="slider">
       <h3>Selected Playlist</h3>
-      <body id="playlistDisplay"> 
-        
-      </body>
+      
       <body>
+        <table id="playlistDisplay"></table>
+
+        <br></br>
+
         Now that you've selected your playlist, would you prefer a recommendation that is similar to 
         the music in your playlist, or would you like to try something new? Set the Slider accordlingly, with 1
         being the least similar to your music, and 10 being the most similar!
+
+        <br></br>
+
+        <input type ="range" id="theSlider" min = "1" max = "10" value = "5">
+
+        <br></br>
+
+        <button id="returnToPL">Back</button>
+        <button id="submitForRec">Submit!</button>
+
       </body>
-      <input type ="range" id="theSlider" min = "1" max = "10" value = "5">
+      
+      
   </template>
 
   <script src="src/api_script.js" type="module"></script>
