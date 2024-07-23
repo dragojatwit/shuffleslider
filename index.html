@@ -30,7 +30,7 @@
     <h3>Logged in as <span data-bind="display_name"></span></h3>
     
     
-    <img width="75" data-bind-src="images[0].url" data-bind-alt="display_name" />
+    <img id="profile-picture" width="75" data-bind-src="images[0].url" data-bind-alt="display_name" />
 
     
     <button id="logout-button" data-bind-onclick="logoutClick();">Log out</button>
@@ -54,16 +54,17 @@
       <h3>Selected Playlist</h3>
       
       <body>
-        <table id="playlistDisplay"></table>
+        <div style="width:fit-content">
+          <table id="playlistDisplay"></table>
 
-        <br></br>
+          <br></br>
 
-        Now that you've selected your playlist, would you prefer a recommendation that is similar to 
-        the music in your playlist, or would you like to try something new? Set the Slider accordlingly, with 1
-        being the least similar to your music, and 10 being the most similar!
+          Now that you've selected your playlist, would you prefer a recommendation that is similar to 
+          the music in your playlist, or would you like to try something new? Set the Slider accordlingly, with 1
+          being the least similar to your music, and 10 being the most similar!
 
-        <br></br>
-
+          <br></br>
+        </div>
         <input type ="range" id="theSlider" min = "1" max = "10" value = "5">
 
         <br></br>

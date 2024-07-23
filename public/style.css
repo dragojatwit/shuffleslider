@@ -6,8 +6,8 @@ body, h1, h2, h3, p, ul, li {
   
   body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    background-color: #f0f0f0;
-    color: #333;
+    background-color: #000000;
+    color: #bcbcbc;
     line-height: 1.6;
     padding: 20px;
   }
@@ -29,8 +29,8 @@ body, h1, h2, h3, p, ul, li {
   }
   
   /* Main container */
-  #main {
-    background-color: #fff;
+  #main, #secondary {
+    background-color: #292929;
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 8px;
@@ -40,16 +40,7 @@ body, h1, h2, h3, p, ul, li {
     margin-right:auto;
   }
   
-  #secondary {
-    background-color: #fff;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width:fit-content;
-    margin-left:auto;
-    margin-right:auto;
-  }
+  
     
   
 
@@ -63,9 +54,14 @@ body, h1, h2, h3, p, ul, li {
     cursor: pointer;
     border-radius: 4px;
     margin-top: 10px;
+    margin-left:auto;
+    margin-right:auto;
   }
 
-  
+  #profile-picture {
+    margin-left:auto;
+    margin-right:auto;
+  }
 
   button:hover {
     background-color: #1ed760;
@@ -99,11 +95,7 @@ body, h1, h2, h3, p, ul, li {
     align-items: center;
   }
 
-  #selectPlaylist {
-    background-color: #7e26bd;
-    
-    
-  }
+  
 
   @media (max-width: 768px) {
     h1 {
@@ -136,7 +128,7 @@ body, h1, h2, h3, p, ul, li {
     width: 25px;
     height: 25px;
     border-radius: 50%; 
-    background: #04AA6D;
+    background: #1ed760;
     cursor: pointer;
   }
   
@@ -144,6 +136,6 @@ body, h1, h2, h3, p, ul, li {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background: #04AA6D;
+    background: #1ed760;
     cursor: pointer;
   }

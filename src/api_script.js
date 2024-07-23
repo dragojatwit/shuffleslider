@@ -174,6 +174,7 @@ function renderTemplate(targetId, templateId, data = null) {
 
         data.items.forEach(item => {
         const tr = document.createElement("tr");
+        
         const tdImage = document.createElement("td");
         if (item.images.length > 0) {
           const img = document.createElement("img");
@@ -188,12 +189,18 @@ function renderTemplate(targetId, templateId, data = null) {
         }
         tr.appendChild(tdImage);
 
+        const tdTitle = document.createElement("td");
+        tdTitle.textContent = item.name;
+        tdTitle.class = "playlist-title";
+
+        tr.appendChild(tdTitle);
+
         const td = document.createElement("td");
         const selectPlaylist = document.createElement("button");
 
         selectPlaylist.id = "selectPlaylist";
         
-        selectPlaylist.textContent = item.name;
+        selectPlaylist.textContent = "Select";
         console.log(item);
         selectPlaylist.addEventListener("click", () => {
             renderTemplate("secondary","slider",item);
