@@ -16,7 +16,7 @@ function(req, res) {
   
   plumber::forward()
 }
-a
+
 
 #* Echo back the input
 #* @param msg The message to echo
