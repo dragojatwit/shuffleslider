@@ -153,6 +153,18 @@ async function getPlaylistData(userData) {
   return await response.json();
 }
 
+async function getPlaylistTracks(playlistData) {
+    const playlistURL = playlistData.href;
+    const response = await fetch('https://api.spotify.com/v1/playlists/{playlist_id}/tracks', {
+      method: 'GET',
+      url : playlistURL,
+      headers: {
+        'Authorization': 'Bearer ' + currentToken.access_token,
+      }
+    })
+    const parsedReponse = await response.json();
+    return parsedResponse.items[0].track.href;
+}
 
 // Click handlers
 async function loginWithSpotifyClick() {
@@ -225,10 +237,11 @@ function renderTemplate(targetId, templateId, data = null) {
       });
 
       const submitButton = clone.getElementById("submitForRec");
-      submitButton.addEventListener("click", () => {
-        //const sliderValue = document.getElementById("theSlider").value;
-        //const rec = callToR(data,sliderValue);
-        const rec = "spotify:track:26I6RaeZZrIMyGAUwfNCxo";
+      submitButton.addEventListener("click", async () => {
+        const recSongExtract = getPlaylistTracks(data);
+        const sliderValue = document.getElementById("theSlider").value;
+        const rec = await callToR(getPlaylistTracks(data),sliderValue);
+        //const rec = "spotify:track:26I6RaeZZrIMyGAUwfNCxo";
         
         renderTemplate("secondary","recommendation",rec);
         renderEmbed(rec);
@@ -307,4 +320,57 @@ function renderTemplate(targetId, templateId, data = null) {
     };
     
     
+
   }
+
+  async function callToR(data, sliderValue) {
+    
+    const Surl = 'http://localhost:5548/process';
+    const Rurl = 'http://localhost:5548/data';  // Ensure this matches your R API endpoint
+    //Send Data to R
+    try {
+      const response = await fetch(Surl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: {
+          playlistUrl : data
+        }
+      })
+
+      console.log(response);
+    }
+    catch (error) {
+      console.error('Error:', error);
+    }
+    //Receiving data back from R
+    try {
+      const response = await fetch(Rurl, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+  
+      
+      // Parse the response body as JSON
+      const rdata = await response.json();
+      console.log('Full response:', rdata);
+
+      // Extract the 'uri' field
+      const uri = rdata[0].uri;
+      console.log('Extracted URI:', uri);
+
+      return uri;
+
+  
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }
+  
