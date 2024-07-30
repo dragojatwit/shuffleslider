@@ -154,17 +154,40 @@ async function getPlaylistData(userData) {
 }
 
 async function getPlaylistTracks(playlistData) {
-    const playlistURL = playlistData.href;
-    const response = await fetch('https://api.spotify.com/v1/playlists/{playlist_id}/tracks', {
-      method: 'GET',
-      url : playlistURL,
-      headers: {
-        'Authorization': 'Bearer ' + currentToken.access_token,
+  const playlistID = playlistData.id;
+  const url = `https://api.spotify.com/v1/playlists/${playlistID}/tracks`;
+  
+  try {
+      const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${currentToken.access_token}`,
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
       }
-    })
-    const parsedReponse = await response.json();
-    return parsedResponse.items[0].track.href;
+
+      const parsedResponse = await response.json();
+
+      if (parsedResponse.items.length === 0) {
+          throw new Error('The playlist is empty.');
+      }
+
+      const firstTrack = parsedResponse.items[0].track;
+
+      if (!firstTrack || !firstTrack.preview_url) {
+          throw new Error('First track does not have a preview URL.');
+      }
+
+      return firstTrack.preview_url;
+  } catch (error) {
+      console.error('Error fetching playlist tracks:', error);
+      return null; // or handle the error as needed
+  }
 }
+
 
 // Click handlers
 async function loginWithSpotifyClick() {
@@ -323,10 +346,16 @@ function renderTemplate(targetId, templateId, data = null) {
 
   }
 
-  async function callToR(data, sliderValue) {
+  async function callToR(trackURL, sliderValue) {
     
-    const Surl = 'http://localhost:5548/process';
-    const Rurl = 'http://localhost:5548/data';  // Ensure this matches your R API endpoint
+    const Surl = 'http://localhost:5251/process';
+    const Rurl = 'http://localhost:5251/data';
+    
+    const data = {
+      playlistUrl: trackURL,
+      sliderValue: sliderValue
+    }
+
     //Send Data to R
     try {
       const response = await fetch(Surl, {
@@ -334,9 +363,7 @@ function renderTemplate(targetId, templateId, data = null) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: {
-          playlistUrl : data
-        }
+        body: JSON.stringify(data)
       })
 
       console.log(response);
