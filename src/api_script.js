@@ -132,7 +132,19 @@ async function refreshToken() {
   return await response.json();
 }
 
+async function ensureValidToken() {
+  const now = new Date();
+  const expiry = new Date(localStorage.getItem('expires'));
+
+  if (now >= expiry) {
+    const tokenData = await refreshToken();
+    currentToken.save(tokenData);
+  }
+}
+
+
 async function getUserData() {
+  await ensureValidToken();
   const response = await fetch("https://api.spotify.com/v1/me", {
     method: 'GET',
     headers: { 'Authorization': 'Bearer ' + currentToken.access_token },
@@ -142,6 +154,7 @@ async function getUserData() {
 }
 
 async function getPlaylistData(userData) {
+  await ensureValidToken();
   const userID = userData.id;
   const response = await fetch(`https://api.spotify.com/v1/users/${userID}/playlists`, {
     method: 'GET',
@@ -154,6 +167,7 @@ async function getPlaylistData(userData) {
 }
 
 async function getPlaylistTracks(playlistData) {
+  await ensureValidToken();
   const playlistID = playlistData.id;
   const url = `https://api.spotify.com/v1/playlists/${playlistID}/tracks`;
   
@@ -180,14 +194,95 @@ async function getPlaylistTracks(playlistData) {
       if (!firstTrack || !firstTrack.preview_url) {
           throw new Error('First track does not have a preview URL.');
       }
-
-      return firstTrack.preview_url;
+      
+      return firstTrack.id;
   } catch (error) {
       console.error('Error fetching playlist tracks:', error);
       return null; // or handle the error as needed
   }
 }
 
+
+//collects audio features to be ran against machine learning algorithm
+async function getTrackData(trackId){
+  await ensureValidToken();
+    const url = `https://api.spotify.com/v1/audio-features/${trackId}`
+    console.log(url);   
+    try {
+      const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${currentToken.access_token}`,
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const parsedResponse = await response.json();
+      console.log(parsedResponse);
+      return parsedResponse;
+
+    } catch (error) {
+        console.error('Error fetching track audio features:', error);
+        return null; // or handle the error as needed
+    }
+}
+
+//collects track artist for the purpose of getting genre
+async function getTrackArtist(trackId){
+  await ensureValidToken();
+    const track_url = `https://api.spotify.com/v1/tracks/${trackId}`
+    try {
+      const response = await fetch(track_url, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${currentToken.access_token}`,
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const parsedResponse = await response.json();
+      console.log(parsedResponse);
+      return parsedResponse.artists[0].id;
+
+
+    } catch (error) {
+        console.error('Error fetching track artist:', error);
+        return null; // or handle the error as needed
+    }
+}
+
+//collects artist genre for the purpose of attaching it to their track
+async function getArtistGenre(artistId){
+  await ensureValidToken();
+    const url = `https://api.spotify.com/v1/artists/${artistId}`
+    try {
+      const response = await fetch(url, {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${currentToken.access_token}`,
+          }
+      });
+
+      if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const parsedResponse = await response.json();
+      console.log(parsedResponse);
+      return parsedResponse.genres[0];
+
+
+    } catch (error) {
+        console.error('Error fetching artist genre:', error);
+        return null; // or handle the error as needed
+    }
+}
 
 // Click handlers
 async function loginWithSpotifyClick() {
@@ -261,9 +356,10 @@ function renderTemplate(targetId, templateId, data = null) {
 
       const submitButton = clone.getElementById("submitForRec");
       submitButton.addEventListener("click", async () => {
-        const recSongExtract = getPlaylistTracks(data);
+        const recSongExtract = await getPlaylistTracks(data);
+        const trackAudioValues = await getTrackData(recSongExtract);
         const sliderValue = document.getElementById("theSlider").value;
-        const rec = await callToR(getPlaylistTracks(data),sliderValue);
+        const rec = await callToR(trackAudioValues,sliderValue);
         //const rec = "spotify:track:26I6RaeZZrIMyGAUwfNCxo";
         
         renderTemplate("secondary","recommendation",rec);
@@ -346,22 +442,58 @@ function renderTemplate(targetId, templateId, data = null) {
 
   }
 
-  async function callToR(trackURL, sliderValue) {
+  async function callToR(songData, sliderValue) {
     
-    const Surl = 'http://localhost:5251/process';
-    const Rurl = 'http://localhost:5251/data';
+    const Surl = 'http://localhost:5555/process';
+    const Rurl = 'http://localhost:5555/recommend';
     
+    //Spotify only attaches genres to artists, have to grab the artist data first and then their genre
+    const artistId = await getTrackArtist(songData.id);
+    const genre = await getArtistGenre(artistId);
+
+    const defaultValues = {
+      id : songData.id,
+      popularity : 0.5,
+      duration_ms : 150000.0,
+      danceability : 0.5,
+      energy : 0.5,
+      loudness : -30,
+      speechiness : 0.5,
+      acousticness : 0.5,
+      instrumentalness : 0.5,
+      liveness : 0.5,
+      valence : 0.5,
+      tempo : 120,
+      sliderValue: 5
+
+    };
+
+
     const data = {
-      playlistUrl: trackURL,
+      ...defaultValues,
+
+      id : songData.id,
+      popularity : songData.popularity !== null && songData.popularity !== undefined ? popularity : defaultValues.popularity ,
+      duration_ms : songData.duration_ms,
+      danceability : songData.danceability,
+      energy : songData.energy,
+      loudness : songData.loudness,
+      speechiness : songData.speechiness,
+      acousticness : songData.acousticness,
+      instrumentalness : songData.instrumentalness,
+      liveness : songData.liveness,
+      valence : songData.valence,
+      tempo : songData.tempo,
       sliderValue: sliderValue
     }
+    console.log(data)
 
     //Send Data to R
     try {
       const response = await fetch(Surl, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(data)
       })
