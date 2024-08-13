@@ -12,8 +12,8 @@ To access the program
 
 Directory
 
-index.html - base and only html file for website
-src/api_script.js - javascript which handles html template switching and api communication
-public/style.css - all css
-project/Shuffle Slider API.R - API to communicate with machine learning algorithm
-project/Data - all ML algorithms and datasets
+index.html - base and only html file for website;
+src/api_script.js - javascript which handles html template switching and api communication;
+public/style.css - all css;
+project/Shuffle Slider API.R - API to communicate with machine learning algorithm;
+project/Data - all ML algorithms and datasets;
