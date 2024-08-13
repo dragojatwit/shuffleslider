@@ -1,14 +1,10 @@
 /**
- * This is an example of a basic node.js script that performs
- * the Authorization Code with PKCE oAuth2 flow to authenticate 
- * against the Spotify Accounts.
- *
- * For more information, read
- * https://developer.spotify.com/documentation/web-api/tutorials/code-pkce-flow
+ * Hash algorithm and token API requests based on Spotify for devs examples
+ * Spotify. (n.d.). Web API. Spotify for Developers. from https://developer.spotify.com/documentation/web-api
  */
 
-const clientId = '268490de207a4fadaf8ab5172f455698'; // your clientId
-const redirectUrl = 'http://localhost:5173/callback';        // your redirect URL - must be localhost URL and/or HTTPS
+const clientId = '268490de207a4fadaf8ab5172f455698'; 
+const redirectUrl = 'http://localhost:5173/callback';        
 
 const authorizationEndpoint = "https://accounts.spotify.com/authorize";
 const tokenEndpoint = "https://accounts.spotify.com/api/token";
@@ -359,8 +355,16 @@ function renderTemplate(targetId, templateId, data = null) {
         const recSongExtract = await getPlaylistTracks(data);
         const trackAudioValues = await getTrackData(recSongExtract);
         const sliderValue = document.getElementById("theSlider").value;
+        
         const rec = await callToR(trackAudioValues,sliderValue);
-        //const rec = "spotify:track:26I6RaeZZrIMyGAUwfNCxo";
+        // if(sliderValue > 5)
+        // {
+        //     rec = "spotify:track:3fe6gbVjPRxQq5NR7MousK";
+        // }else
+        // {
+        //     rec = "spotify:track:7kawUx6kYAE1Uf1xciF6KO";
+        // }
+        
         
         renderTemplate("secondary","recommendation",rec);
         renderEmbed(rec);
@@ -411,7 +415,6 @@ function renderTemplate(targetId, templateId, data = null) {
         const prefix = targetType === "PROPERTY" ? "data." : "";
         const expression = prefix + attr.value.replace(/;\n\r\n/g, "");
   
-        // Maybe use a framework with more validation here ;)
         try {
           ele[targetProp] = targetType === "PROPERTY" ? eval(expression) : () => { eval(expression) };
           ele.removeAttribute(attr.name);
@@ -521,11 +524,14 @@ function renderTemplate(targetId, templateId, data = null) {
       const rdata = await response.json();
       console.log('Full response:', rdata);
 
-      // Extract the 'uri' field
-      const uri = rdata[0].uri;
-      console.log('Extracted URI:', uri);
-
+      // Extract the 'track id' field and make a uri
+      const parsedJsonBody = JSON.parse(rdata.json_body[0]);
+      const responseTrackId = parsedJsonBody.track_id[0];
+      const uri = `spotify:track:${responseTrackId}`;
+      console.log('Extracted uri:', uri);
+      
       return uri;
+        
 
   
     } catch (error) {
