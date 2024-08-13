@@ -5,7 +5,7 @@ library(caret)
 library(jsonlite)
 
 # Load the trained model and training data
-model_path <- "C:/Users/dragoj/Documents/Shuffle Slider/Project/data/NeWTeSTInGMoDel.RData"
+model_path <- "Project/data/NeWTeSTInGMoDel.RData"
 
 if (file.exists(model_path)) {
   load(model_path)
@@ -16,7 +16,7 @@ if (file.exists(model_path)) {
 
 #Load the csv file
 
-dataset_5k <- read.csv("C:/Users/dragoj/Documents/Shuffle Slider/Project/data/dataset(5k).csv", sep = ",", header = TRUE)
+dataset_5k <- read.csv("Project/data/dataset(5k).csv", sep = ",", header = TRUE)
 
 
 # Global variable to store the processed input song data
