@@ -4,8 +4,17 @@ library(class)
 library(caret)
 library(jsonlite)
 
-# Load the trained model and training data
-model_path <- "Project/data/NeWTeSTInGMoDel.RData"
+# Get the directory of the current script
+script_dir <- dirname(rstudioapi::getActiveDocumentContext()$path)
+
+# Move two levels up
+parent_dir <- dirname(dirname(script_dir))
+
+# Set the working directory
+setwd(parent_dir)
+
+# Now you can use relative paths from this directory
+model_path <- file.path(parent_dir, "Project", "data", "NeWTeSTInGMoDel.RData")
 
 if (file.exists(model_path)) {
   load(model_path)
@@ -16,7 +25,7 @@ if (file.exists(model_path)) {
 
 #Load the csv file
 
-dataset_5k <- read.csv("Project/data/dataset(5k).csv", sep = ",", header = TRUE)
+dataset_5k <- read.csv(file.path(parent_dir, "Project", "data", "dataset(5k).csv"))
 
 
 # Global variable to store the processed input song data
@@ -210,9 +219,11 @@ function() {
   
   predictions <- make_predictions(knn_model, combined_test_data, test_track_id)
 
-  write.csv(predictions, "Project/data/writtenOutput.csv", row.names = FALSE)
+  csv_write_path <- file.path(parent_dir, "Project", "data", "writtenOutput.csv")
   
-  df <- read.csv("Project/data/writtenOutput.csv")
+  write.csv(predictions, csv_write_path, row.names = FALSE)
+  
+  df <- read.csv(csv_write_path)
   
   
   
