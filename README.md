@@ -3,6 +3,7 @@ Welcome to Shuffle Slider!
 In order to run this program there are two prerequisites:
 1. Installation of NodeJS to run the webapp on a local server
 2. Installation of Rstudio to run the API which hosts the Machine Learning Algorithm
+3. Installation of Rstudio package rstudioapi
 
 To access the program
 1. Navigate to shuffleslider/project/Rcode and launch Shuffle Slider API.R and run it
